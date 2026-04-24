@@ -1,0 +1,3916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grbić Lab – Spider Mite Team | Western University</title>
+    <link rel="icon" href="Images/Body/iconweb.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /*
+        =====================================================================
+        GRBIĆ LAB WEBSITE - EASY MAINTAINER GUIDE
+        =====================================================================
+        This file is organized for lab members who don\'t code much.
+
+        WHAT EACH MAJOR SECTION DOES:
+        ===== CSS SECTIONS (search by ===== number) =====
+        1) Global base styles - fonts, colors, page layout
+        2) Header - top banner image and title
+        3) Navigation - top menu bar
+        4) Carousel - collapsible image slider under header
+        5) Dropdowns - submenu behavior
+        6) Content sections - how pages show/hide
+        7) Updates accordion - year/month collapsible updates
+        8) Gallery - horizontal thumbs and lightbox
+        9) People - team member cards
+        10) Pets - pet grid with fullscreen
+        11) Research - expandable research cards
+        12) Services - service cards
+        13) Footer - bottom info and back-to-top button
+
+        ===== HTML SECTIONS (search by ===== number) =====
+        Same order as CSS.
+
+        ===== JAVASCRIPT SECTIONS (search by SECTION letter) =====
+        A) Main page setup, nav switching, carousel, pets
+        B) Research card expand
+        C) Updates year/month toggle
+        D) Gallery scrolling/lightbox
+        E) Service buttons to contact
+
+        EDITING TIPS:
+        - Change TEXT: look in <body> HTML sections
+        - Change COLORS/SPACING: look in matching CSS section
+        - Change CLICKS/ANIMATIONS: look in matching JS section
+        - Don\'t rename IDs/classes unless you update all 3 areas
+        - Draft duplicates have been removed safely
+
+        =====================================================================
+        */
+        /* ===== 1) Global base styles ===== */
+        /* Sets default fonts, colors, spacing for entire site. */
+        body {
+            margin: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== 2) Header banner ===== */
+        /* Top image background with title overlay. */
+        header {
+            background: url("Images/Head/lab_head.jpg") no-repeat center center/cover;
+            height: 250px;
+            position: relative;
+            color: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-top: 100px;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(80, 0, 130, 0.281);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            background-color: rgb(80, 0, 130);
+            /* Western purple overlay */
+            padding: 15px 30px;
+            border-radius: 100px;
+            font-size: 3.5em;
+            text-align: center;
+        }
+
+        .subtitle {
+            display: block;
+            font-size: 0.5em;
+            font-weight: normal;
+            margin-top: 1px;
+        }
+
+        /* ===== 3) Navigation base ===== */
+        /* Main menu bar appearance. */
+        nav {
+            background-color: #4b0082;
+            overflow: hidden;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav>ul>li {
+            padding: 14px 20px;
+            cursor: pointer;
+            color: white;
+            font-weight: 500;
+        }
+
+        nav li:hover {
+            background-color: #4b0082;
+        }
+
+        /* ===== 4) Highlights carousel ===== */
+        /* Collapsible image slider. */
+        /* ===== COLLAPSIBLE CAROUSEL (FINAL) ===== */
+
+        /* Space from header and overall container */
+        .collapsible-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 10px auto;
+            padding: 0;
+            border-radius: 12px;
+            background: #f5f1fa;
+            box-shadow: 0 4px 16px transparent;
+            overflow: hidden;
+        }
+
+        /* Purple bar – always visible */
+        .collapsible-section .section-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgb(80, 0, 130);
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        .collapsible-section .section-toggle h3 {
+            margin: 0;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-btn.spinning {
+            transform: rotate(180deg);
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Wrapper that shows/hides the carousel content */
+        .carousel-wrapper {
+            background: transparent;
+        }
+
+        /* When collapsed, hide only the carousel, not the bar */
+        .collapsible-section.collapsed .carousel-wrapper {
+            display: none;
+        }
+
+        /* ===== CAROUSEL BODY ===== */
+        .carousel {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            margin: 15px 10px 15px;
+            border-radius: 10px;
+            background: transparent;
+        }
+
+        /* Image strip */
+        .carousel-images {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        /* Images: fully visible, centered, no cropping */
+        .carousel-images img {
+            max-height: 100%;
+            max-width: 100%;
+            width: 100%;
+            object-fit: contain;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        /* Controls overlay */
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0;
+            pointer-events: none;
+        }
+
+        /* Arrow buttons */
+        .carousel-button {
+            pointer-events: all;
+            background-color: rgba(80, 0, 130, 0.8);
+            border: none;
+            padding: 10px 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.4em;
+            border-radius: 50%;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(120, 0, 190, 0.9);
+            transform: scale(1.05);
+        }
+
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .collapsible-section {
+                margin: 20px auto 30px;
+                max-width: 95%;
+            }
+
+            .carousel {
+                height: 280px;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .collapsible-section .section-toggle {
+                padding: 8px 14px;
+                font-size: 0.95em;
+            }
+
+            .carousel {
+                height: 220px;
+                margin: 8px;
+            }
+
+            .carousel-button {
+                padding: 8px 10px;
+                font-size: 1.2em;
+            }
+        }
+
+
+        /* ===== 5) Dropdown menus ===== */
+        /* Submenu positioning and hover. */
+        /* Main nav bar style */
+        nav {
+            background-color: #5e2b97;
+            height: 48px;
+            line-height: 48px;
+            position: relative;
+            z-index: 100;
+            overflow: visible;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            height: 48px;
+            flex-wrap: nowrap;
+        }
+
+        nav ul li {
+            position: relative;
+            padding: 0 11px;
+            cursor: pointer;
+            color: white;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            line-height: 48px;
+            padding: 0 5px;
+        }
+
+
+        /* Dropdown menu is absolutely positioned */
+        nav ul li ul.dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 48px;
+            left: 0;
+            background-color: #5e2b97;
+            min-width: auto;
+            padding: 0;
+            flex-direction: row;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dropdown items style */
+        nav ul li ul.dropdown-menu li {
+            padding: 6px 12px;
+            border-bottom: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul li ul.dropdown-menu li:last-child {
+            border-right: none;
+        }
+
+        /* Show dropdown on toggle (JS toggle class 'show') */
+        nav ul li ul.dropdown-menu.show {
+            display: flex;
+        }
+
+        /* Optional: add pointer cursor, styles */
+        nav ul li:hover>a,
+        nav ul li:hover {
+            background-color: #764abc;
+        }
+
+
+        nav ul li.dropdown::after {
+            content: "▾";
+            /* or use ► or ▼ */
+            font-size: 0.7em;
+            margin-left: 0.1px;
+            color: #fff;
+        }
+
+        /* ===== 6) Page sections ===== */
+        /* Show/hide logic for Welcome/Research/etc. */
+        section:not(.collapsible-section) {
+            padding: 50px 10%;
+            max-width: 1000px;
+            margin: auto;
+            display: none;
+        }
+
+        section:not(.collapsible-section).active {
+            display: block;
+        }
+
+
+        section h2 {
+            color: #4b0082;
+            border-bottom: 3px solid #4b0082;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+
+        /* ===== 7) Updates accordion ===== */
+        /* ===== Collapsible Lab Updates: Year > Month ===== */
+        .updates-archive {
+            margin-top: 20px;
+        }
+
+        .update-year {
+            margin-bottom: 18px;
+            border: 1px solid #ddd6ea;
+            border-radius: 12px;
+            background: #faf8fd;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .update-year-toggle,
+        .update-month-toggle {
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+        }
+
+        .update-year-toggle {
+            background: rgb(80, 0, 130);
+            color: white;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .update-year-toggle:hover {
+            background: rgb(97, 20, 148);
+        }
+
+        .update-year-content {
+            display: none;
+            padding: 14px 14px 6px 14px;
+            background: #fcfbfe;
+        }
+
+        .update-year.open .update-year-content {
+            display: block;
+        }
+
+        .update-month {
+            margin-bottom: 12px;
+            border: 1px solid #e7def3;
+            border-radius: 10px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .update-month-toggle {
+            background: #f3ecfa;
+            color: rgb(80, 0, 130);
+            padding: 12px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .update-month-toggle:hover {
+            background: #ece2f8;
+        }
+
+        .update-month-content {
+            display: none;
+            padding: 14px 16px 10px 16px;
+            background: #fff;
+        }
+
+        .update-month.open .update-month-content {
+            display: block;
+        }
+
+        .update-icon {
+            font-size: 0.95rem;
+            transition: transform 0.3s ease;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .update-year.open>.update-year-toggle .update-icon,
+        .update-month.open>.update-month-toggle .update-icon {
+            transform: rotate(180deg);
+        }
+
+        .updates-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .update-item {
+            margin-bottom: 12px;
+            padding: 14px 16px;
+            border: 1px solid #eee7f7;
+            border-radius: 8px;
+            background: #fcfbff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .update-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .update-date {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #5e2b97;
+            margin-bottom: 8px;
+        }
+
+        .update-item p {
+            margin: 0;
+            line-height: 1.65;
+        }
+
+        @media (max-width: 768px) {
+            .update-year-toggle {
+                padding: 12px 14px;
+                font-size: 1rem;
+            }
+
+            .update-month-toggle {
+                padding: 11px 14px;
+                font-size: 0.96rem;
+            }
+
+            .update-year-content,
+            .update-month-content,
+            .update-item {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        }
+
+        .text-image-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-image-container p {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .inline-photo {
+            width: 100px;
+            height: auto;
+            object-fit: contain;
+            flex-shrink: 0;
+            cursor: zoom-in;
+        }
+
+        /* Updates image style */
+        .inline-photo {
+            display: block;
+            max-width: 300px;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== Lab updates accordion ===== */
+        .updates-year {
+            margin-top: 20px;
+        }
+
+        .updates-year-title {
+            color: rgb(80, 0, 130);
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+
+        .update-month {
+            margin-bottom: 14px;
+            border: 1px solid #e5dff0;
+            border-radius: 10px;
+            background: #fbf9fe;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .update-month-toggle {
+            width: 100%;
+            background: #f3ecfa;
+            color: rgb(80, 0, 130);
+            border: none;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .update-month-toggle:hover {
+            background: #ede3f8;
+        }
+
+        .update-month-toggle span {
+            pointer-events: none;
+        }
+
+        .update-month-icon {
+            font-size: 0.95rem;
+            transition: transform 0.3s ease;
+        }
+
+        .update-month.open .update-month-icon {
+            transform: rotate(180deg);
+        }
+
+        .update-month-content {
+            display: none;
+            padding: 14px 18px 6px 18px;
+        }
+
+        .update-month.open .update-month-content {
+            display: block;
+        }
+
+        .updates-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .update-item {
+            padding: 0 0 14px 0;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #ece6f5;
+        }
+
+        .update-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .update-date {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #5e2b97;
+            margin-bottom: 6px;
+        }
+
+        .update-item p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ===== 8) Gallery lightbox ===== */
+        /* Horizontal thumbs and fullscreen viewer. */
+        .gallery-strip-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-strip {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 4px 14px 4px;
+            flex: 1;
+        }
+
+        .gallery-strip::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .gallery-strip::-webkit-scrollbar-thumb {
+            background: rgba(80, 0, 130, 0.35);
+            border-radius: 999px;
+        }
+
+        .gallery-strip::-webkit-scrollbar-track {
+            background: #eee;
+            border-radius: 999px;
+        }
+
+        .gallery-strip-btn {
+            background: rgb(80, 0, 130);
+            color: white;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: background 0.25s ease, transform 0.2s ease;
+        }
+
+        .gallery-strip-btn:hover {
+            background: rgb(108, 29, 159);
+            transform: scale(1.05);
+        }
+
+        .gallery-thumb {
+            border: none;
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 170px;
+            max-width: 170px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            text-align: left;
+        }
+
+        .gallery-thumb:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+        }
+
+        .gallery-thumb-img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-thumb-label {
+            display: block;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            color: rgb(80, 0, 130);
+            font-weight: 600;
+            background: #faf7fd;
+            border-top: 1px solid #eee;
+        }
+
+        /* Lightbox */
+        .gallery-lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px 80px 20px;
+        }
+
+        .gallery-lightbox.open {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 90vw;
+            max-height: 78vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+            margin: 0 auto;
+        }
+
+        .lightbox-caption {
+            margin-top: 14px;
+            color: white;
+            background: rgba(20, 20, 20, 0.75);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-close:hover,
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.24);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-thumb {
+                min-width: 140px;
+                max-width: 140px;
+            }
+
+            .gallery-thumb-img {
+                height: 110px;
+            }
+
+            .gallery-strip-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .lightbox-caption {
+                font-size: 0.92rem;
+                padding: 10px 12px;
+            }
+
+            .lightbox-nav {
+                width: 42px;
+                height: 42px;
+            }
+        }
+
+
+        /* ===== 9) Team members ===== */
+        /* Profile cards with photos/social links. */
+        .team-member-right {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 2rem;
+        }
+
+        .member-photo img {
+            width: 300px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .member-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            color: rgb(80, 0, 130);
+            text-decoration: none;
+        }
+
+        .member-name:hover {
+            text-decoration: underline;
+        }
+
+        .member-info p {
+            margin: 0.5rem 0;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.5rem;
+            align-self: flex-start;
+        }
+
+        .social-icons a {
+            font-size: 1.5rem;
+            color: rgb(80, 0, 130);
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.3);
+            color: rgb(120, 0, 180);
+        }
+
+        /* ===== 10) Pets grid ===== */
+        /* Pet cards with click-fullscreen. */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* Pet Item (each pet card) */
+        .pet-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        /* Pet Photo (circle shape) */
+        .pet-photo img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+        }
+
+        /* Pet Info Styling */
+        .pet-info {
+            margin-top: 10px;
+        }
+
+        .pet-name {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .pet-activity {
+            font-style: italic;
+            color: #555;
+        }
+
+        /* ================= Fullscreen mode ================= */
+        .pet-item.active {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            overflow: hidden;
+        }
+
+        .pet-item.active .pet-photo img {
+            width: 40%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .pet-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* ===== 11) Research cards ===== */
+        /* Expandable research stream cards. */
+        .research-intro {
+            max-width: 880px;
+            margin-bottom: 26px;
+            line-height: 1.7;
+        }
+
+        .research-streams {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+            align-items: start;
+        }
+
+        .research-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f7f2fb 100%);
+            border: 1px solid rgba(80, 0, 130, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            padding: 22px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .research-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, rgb(80, 0, 130), rgb(130, 65, 180));
+        }
+
+        .research-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.12);
+            border-color: rgba(80, 0, 130, 0.28);
+        }
+
+        .research-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .research-card h3 {
+            margin: 0 0 10px 0;
+            color: rgb(80, 0, 130);
+            font-size: 1.18rem;
+        }
+
+        .research-short {
+            margin: 0;
+            color: #555;
+            line-height: 1.65;
+        }
+
+        .research-toggle {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 50%;
+            background: rgba(80, 0, 130, 0.1);
+            color: rgb(80, 0, 130);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            font-weight: bold;
+            transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .research-figure {
+            margin: 18px 0 0 0;
+        }
+
+        .research-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 14px;
+            display: block;
+            background: #ece6f3;
+        }
+
+        .research-figure figcaption {
+            margin-top: 10px;
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .research-details {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.45s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            margin-top: 0;
+        }
+
+        .research-details p {
+            margin: 0 0 14px 0;
+            line-height: 1.7;
+        }
+
+        .research-details ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #444;
+        }
+
+        .research-details li {
+            margin-bottom: 8px;
+        }
+
+        .research-card.active {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14);
+            border-color: rgba(80, 0, 130, 0.35);
+        }
+
+        .research-card.active .research-details {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 18px;
+        }
+
+        .research-card.active .research-toggle {
+            transform: rotate(45deg);
+            background: rgba(80, 0, 130, 0.16);
+        }
+
+        .research-streams.has-active .research-card:not(.active) {
+            opacity: 0.82;
+        }
+
+        @media (max-width: 900px) {
+            .research-streams {
+                grid-template-columns: 1fr;
+            }
+
+            .research-card {
+                padding: 18px;
+            }
+
+            .research-image {
+                height: 170px;
+            }
+        }
+
+        /* ===== 12) Services cards ===== */
+        /* Service info with contact buttons. */
+        .services-intro {
+            max-width: 850px;
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f7f2fb 100%);
+            border: 1px solid rgba(80, 0, 130, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, rgb(80, 0, 130), rgb(130, 65, 180));
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.12);
+            border-color: rgba(80, 0, 130, 0.28);
+        }
+
+        .service-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: rgba(80, 0, 130, 0.1);
+            color: rgb(80, 0, 130);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .service-card-content h3 {
+            margin: 0 0 8px 0;
+            color: rgb(80, 0, 130);
+            font-size: 1.25rem;
+        }
+
+        .service-subtitle {
+            margin: 0 0 12px 0;
+            color: #5f5f5f;
+            font-size: 0.98rem;
+            font-weight: 500;
+        }
+
+        .service-card-content p {
+            margin: 0 0 14px 0;
+            line-height: 1.7;
+        }
+
+        .service-points {
+            margin: 0 0 18px 0;
+            padding-left: 18px;
+            color: #444;
+        }
+
+        .service-points li {
+            margin-bottom: 8px;
+        }
+
+        .service-btn {
+            display: inline-block;
+            margin-top: auto;
+            align-self: flex-start;
+            background: rgb(80, 0, 130);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.25s ease, transform 0.2s ease;
+        }
+
+        .service-btn:hover {
+            background: rgb(110, 24, 167);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card {
+                padding: 20px;
+            }
+        }
+
+        /* ================= Responsive: Stack vertically on mobile ================= */
+        @media (max-width: 768px) {
+            .team-member-right {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .member-photo img {
+                width: 200px;
+                margin-bottom: 1rem;
+            }
+
+            .social-icons {
+                align-self: center;
+                /* center icons on mobile */
+            }
+        }
+
+
+        /* ===== 13) Footer & utilities ===== */
+        /* Bottom info and back-to-top button. */
+        footer {
+            background-color: #e2dde4;
+            /* Dark background color */
+            color: #252425;
+            /* White text color */
+            padding: 18px;
+            /* Padding around the footer */
+            text-align: center;
+            /* Center align the text */
+            font-size: 14px;
+            /* Set font size */
+            line-height: 1.5;
+            /* Space between lines */
+        }
+
+        footer .footer-content {
+            max-width: 1200px;
+            /* Max width for the footer content */
+            margin: 0 auto;
+            /* Center the content */
+        }
+
+        footer a {
+            color: rgb(80, 0, 130);
+            /* Gold color for the link to make it stand out */
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            /* Underline effect on hover for clarity */
+        }
+
+        footer p {
+            margin: 1px 0;
+            /* Space between paragraphs */
+        }
+
+        footer p:last-child {
+            margin-bottom: 0;
+            /* No bottom margin for the last paragraph */
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            background-color: rgb(80, 0, 130);
+            color: white;
+            border: none;
+            padding: 15px 15px;
+            font-size: 16px;
+            border-radius: 100px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        #backToTopIcon {
+            font-weight: 100;
+            font-size: 17px;
+        }
+
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            header {
+                height: 200px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav li ul {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<!-- ===== HTML STRUCTURE ===== -->
+<!-- 1) Header, 2) Carousel, 3) Nav, 4) Content sections, 5) Footer -->
+
+<body>
+    <!-- ===== 1) HEADER ===== -->
+    <!-- Top banner image and title. -->
+    <header>
+        <h1>Grbić Lab<br><span class="subtitle">The Spider Mite Team</span></h1>
+    </header>
+
+    <!-- ===== IMAGE CAROUSEL ===== -->
+
+
+    <!-- ===== 2) HIGHLIGHTS CAROUSEL ===== -->
+    <!-- Collapsible image slider. -->
+    <section id="carousel-section" class="collapsible-section collapsed">
+        <div class="section-toggle" id="carouselToggleBar">
+            <h3>Lab Highlights</h3>
+            <button class="toggle-btn" id="carouselToggle">▼</button>
+        </div>
+
+        <div class="carousel-wrapper">
+            <div class="carousel">
+                <div class="carousel-images">
+                    <img src="Images/Slide/lab1.jpg" alt="Lab work">
+                    <img src="Images/Slide/lab2.JPG" alt="Lab work">
+                    <img src="Images/Slide/lab3.JPG" alt="Lab work">
+                    <img src="Images/Slide/lab4.JPG" alt="Lab work">
+                    <img src="Images/Slide/lab5.JPG" alt="Lab work">
+                    <img src="Images/Slide/lab6.JPG" alt="Lab work">
+                    <img src="Images/Slide/spidermitemeeting.jpg" alt="Spider mite meeting">
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-button" id="prevBtn">&#10094;</button>
+                    <button class="carousel-button" id="nextBtn">&#10095;</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+    <!-- ===== 3) NAVIGATION ===== -->
+    <!-- Menu to switch content sections. -->
+    <nav id="mainNav">
+        <ul>
+            <li data-section="welcome" class="dropdown">
+                <a href="#welcome">Welcome</a>
+                <ul class="dropdown-menu">
+                    <li data-subsection="welcome"><a href="#welcome">The Grbić Lab</a></li>
+                    <li data-subsection="labupdates"><a href="#labupdates">Lab Updates</a></li>
+                    <li data-subsection="gallery"><a href="#gallery">Gallery</a></li>
+                </ul>
+            </li>
+
+            <li data-section="research" class="dropdown">
+                <a href="#research">Research</a>
+                <ul class="dropdown-menu">
+                    <li data-subsection="overview"><a href="#overview">Overview</a></li>
+                    <li data-subsection="labstreams"><a href="#labstreams">Lab Streams</a></li>
+                    <li data-subsection="posters"><a href="#posters">Posters</a></li>
+                    <li data-subsection="presentations"><a href="#presentations">Presentations</a></li>
+                </ul>
+            </li>
+
+            <li data-section="people" class="dropdown">
+                <a href="#people">People</a>
+                <ul class="dropdown-menu">
+                    <li data-subsection="mentors"><a href="#mentors">Mentors</a></li>
+                    <li data-subsection="postdocs"><a href="#postdocs">Postdoc Fellows</a></li>
+                    <li data-subsection="students"><a href="#students">Students</a></li>
+                    <li data-subsection="pets"><a href="#pets">Lab Pets</a></li>
+                    <!--<li data-subsection="alumni"><a href="#alumni">Alumni</a></li>-->
+                </ul>
+            </li>
+
+            <li data-section="services" class="dropdown">
+                <a href="#services">Services</a>
+                <ul class="dropdown-menu">
+                    <!--<li data-subsection="resistance"><a href="#resistance">Resistance Status</a></li>
+                    <li data-subsection="genotyping"><a href="#genotyping">Genotyping</a></li>
+                    <li data-subsection="new_species"><a href="#new_species">New Species</a></li>-->
+                </ul>
+            </li>
+
+            <li data-section="opportunities"><a href="#opportunities">Opportunities</a></li>
+            <li data-section="publications"><a href="#publications">Publications</a></li>
+            <li data-section="links"><a href="#links">Links</a></li>
+            <li data-section="contact"><a href="#contact">Contact</a></li>
+            <li data-section="western-biology"><a href="https://www.uwo.ca/biology/" target="_blank"
+                    rel="noopener noreferrer">Western Biology</a></li>
+        </ul>
+    </nav>
+
+
+    <!-- ===== 4) MAIN CONTENT SECTIONS ===== -->
+    <!-- Welcome, Research, People, Services, etc. (JS shows one at a time). -->
+    <section id="welcome">
+        <h2 id="welcome">Welcome to the Grbić Lab</h2>
+        <p>
+            We are the Spider Mite Team at Western University in Ontario, Canada. Our research focuses
+            on the <strong>genomics and genetics of spider mite–host plant interactions, adaptation, and
+                resistance to pesticides</strong>. Our goal is to understand the molecular and evolutionary
+            mechanisms driving pest adaptation and to support sustainable agriculture through genomic insights.
+        </p>
+
+        <!-- ===== LAB UPDATES ===== -->
+        <br>
+        <h2 id="labupdates">Lab Updates</h2>
+
+        <div class="updates-archive">
+
+            <!-- ===== 2026 ===== -->
+            <div class="update-year open">
+                <button class="update-year-toggle" type="button">
+                    <span>2026</span>
+                    <span class="update-icon">▼</span>
+                </button>
+
+                <div class="update-year-content">
+
+                    <!--<div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>December</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Dec XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>November</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Nov XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>October</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Oct XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>September</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Sep XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>August</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Aug XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>July</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jul XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>June</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jun XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>May</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">May XX, 2026</span><p>To update....</p></li>
+                            </ul>
+                        </div>
+                    </div>-->
+
+                    <div class="update-month open">
+                        <button class="update-month-toggle" type="button">
+                            <span>April</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Apr XX, 2026</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>March</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Mar XX, 2026</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>February</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Feb XX, 2026</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="update-month">
+                        <button class="update-month-toggle" type="button">
+                            <span>January</span>
+                            <span class="update-icon">▼</span>
+                        </button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jan XX, 2026</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== 2025 ===== -->
+            <div class="update-year">
+                <button class="update-year-toggle" type="button">
+                    <span>2025</span>
+                    <span class="update-icon">▼</span>
+                </button>
+
+                <div class="update-year-content">
+
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>December</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Dec XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>November</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Nov XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>October</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item">
+                                    <span class="update-date">Oct 31, 2025</span>
+                                    <p>
+                                        15th Spider Mite Genome Meeting, held in Logroño, La Rioja, Spain,
+                                        from October 27 to 29, 2025.
+                                        <a href="https://www.unirioja.es/actividades/15th-spider-mite-genome-meeting/"
+                                            target="_blank" rel="noopener noreferrer" style="color: purple;">
+                                            Universidad de La Rioja, 2025
+                                        </a>
+                                    </p>
+                                </li>
+
+                                <li class="update-item">
+                                    <span class="update-date">Oct 27, 2025</span>
+                                    <p>
+                                        The Grbić Lab participated in the 162nd Entomological Society of Ontario
+                                        Annual General Meeting and the Ontario Pest Management Conference at the
+                                        Royal Botanic Gardens, Burlington, Ontario, from October 24 to 26, 2025.
+                                        <a href="https://www.entsocont.ca/eso_agm_2025-855639.html" target="_blank"
+                                            rel="noopener noreferrer" style="color: purple;">2025 ESO</a> |
+                                        <a href="https://www.ontariopmc.ca/" target="_blank" rel="noopener noreferrer"
+                                            style="color: purple;">OPMC</a>
+                                    </p>
+                                </li>
+
+                                <li class="update-item">
+                                    <span class="update-date">Oct 10, 2025</span>
+                                    <p>
+                                        We are excited to highlight the Grbić Lab’s participation in the 2025
+                                        Canadian Greenhouse Conference, held in Niagara Falls, Ontario, Canada,
+                                        from October 8 to 9, 2025.
+                                        <a href="https://www.canadiangreenhouseconference.com/" target="_blank"
+                                            rel="noopener noreferrer" style="color: purple;">2025 CGC</a>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>September</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Sep XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>August</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Aug XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>July</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jul XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>June</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jun XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>May</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">May XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>April</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Apr XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>March</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Mar XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>February</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Feb XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>January</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jan XX, 2025</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== 2024 ===== -->
+            <div class="update-year">
+                <button class="update-year-toggle" type="button">
+                    <span>2024</span>
+                    <span class="update-icon">▼</span>
+                </button>
+
+                <div class="update-year-content">
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>December</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Dec XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>November</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Nov XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>October</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Oct XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>September</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Sep XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>August</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Aug XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>July</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jul XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>June</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jun XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>May</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">May XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>April</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Apr XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle" type="button"><span>March</span><span
+                                class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Mar XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>February</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Feb XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="update-month"><button class="update-month-toggle"
+                            type="button"><span>January</span><span class="update-icon">▼</span></button>
+                        <div class="update-month-content">
+                            <ul class="updates-list">
+                                <li class="update-item"><span class="update-date">Jan XX, 2024</span>
+                                    <p>To update....</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+
+        <!-- ===== LAB GALLERY ===== -->
+        <br>
+        <h2 id="gallery">Gallery</h2>
+        <p>Browse moments from conferences, lab events, meetings, and team life. Click any image to view it full screen.
+        </p>
+
+        <div class="gallery-strip-wrapper">
+            <button class="gallery-strip-btn" id="galleryScrollLeft" aria-label="Scroll gallery left">&#10094;</button>
+
+            <div class="gallery-strip" id="galleryStrip">
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/1.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/1.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/2.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/2.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/3.jpg"
+                    data-caption="Lab Potluck Replace with legend2025 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2025">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/3.jpg"
+                        alt="Lab Potluck Replace with legend2025" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2025</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/4.jpg"
+                    data-caption="Spider Mite Meeting — Add caption here." aria-label="Open image: Spider Mite Meeting">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/4.jpg" alt="Spider Mite Meeting"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/5.jpg"
+                    data-caption="Conference moment — Add caption here." aria-label="Open image: Conference moment">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/5.jpg" alt="Conference moment"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/6.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/6.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/7.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/7.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/8.jpg"
+                    data-caption="Lab Potluck Replace with legend2025 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2025">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/8.jpg"
+                        alt="Lab Potluck Replace with legend2025" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2025</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/9.jpg"
+                    data-caption="Spider Mite Meeting — Add caption here." aria-label="Open image: Spider Mite Meeting">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/9.jpg" alt="Spider Mite Meeting"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/10.jpg"
+                    data-caption="Conference moment — Add caption here." aria-label="Open image: Conference moment">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/10.jpg" alt="Conference moment"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/11.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/11.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/12.jpg"
+                    data-caption="Lab Potluck Replace with legend2025 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2025">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/12.jpg"
+                        alt="Lab Potluck Replace with legend2025" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2025</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/13.jpg"
+                    data-caption="Spider Mite Meeting — Add caption here." aria-label="Open image: Spider Mite Meeting">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/13.jpg" alt="Spider Mite Meeting"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/14.jpg"
+                    data-caption="Conference moment — Add caption here." aria-label="Open image: Conference moment">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/14.jpg" alt="Conference moment"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/15.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/15.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/16.jpg"
+                    data-caption="Lab Potluck Replace with legend2025 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2025">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/16.jpg"
+                        alt="Lab Potluck Replace with legend2025" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2025</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/17.jpg"
+                    data-caption="Spider Mite Meeting — Add caption here." aria-label="Open image: Spider Mite Meeting">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/17.jpg" alt="Spider Mite Meeting"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/18.jpg"
+                    data-caption="Conference moment — Add caption here." aria-label="Open image: Conference moment">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/18.jpg" alt="Conference moment"
+                        class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/19.jpg"
+                    data-caption="Lab Potluck Replace with legend2024 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2024">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/19.jpg"
+                        alt="Lab Potluck Replace with legend2024" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2024</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/20.jpg"
+                    data-caption="Lab Potluck Replace with legend2025 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2025">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/20.jpg"
+                        alt="Lab Potluck Replace with legend2025" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2025</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/21.jpg"
+                    data-caption="Lab Potluck Replace with legend2026 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2026">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/21.jpg"
+                        alt="Lab Potluck Replace with legend2026" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2026</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/22.jpg"
+                    data-caption="Lab Potluck Replace with legend2027 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2027">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/22.jpg"
+                        alt="Lab Potluck Replace with legend2027" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2027</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/23.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/23.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/24.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/24.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/25.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/25.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/26.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/26.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/27.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/27.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/28.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/28.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <button class="gallery-thumb" data-full="Split/split-complete-lab-website/Images/Gallery/29.jpg"
+                    data-caption="Lab Potluck Replace with legend2028 — Add caption here."
+                    aria-label="Open image: Lab Potluck Replace with legend2028">
+                    <img src="Split/split-complete-lab-website/Images/Gallery/29.jpg"
+                        alt="Lab Potluck Replace with legend2028" class="gallery-thumb-img">
+                    <span class="gallery-thumb-label">Replace with legend2028</span>
+                </button>
+
+                <!-- Duplicate and edit as needed -->
+
+            </div>
+
+            <button class="gallery-strip-btn" id="galleryScrollRight"
+                aria-label="Scroll gallery right">&#10095;</button>
+        </div>
+
+        <!-- Fullscreen lightbox -->
+        <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Close image">&times;</button>
+            <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">&#10094;</button>
+
+            <div class="lightbox-content">
+                <img id="lightboxImage" src="" alt="">
+                <div class="lightbox-caption" id="lightboxCaption"></div>
+            </div>
+
+            <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">&#10095;</button>
+        </div>
+        <br>
+
+        <!-- ===== WEBSITE VISITORS ===== -->
+        <br>
+        <div style="display: flex; justify-content: space-between; gap: 20px;">
+            <!--<div style="flex: 1;">
+                <h3>.</h3>
+                <p>.</p>
+            </div>-->
+            <!--<div style="flex: 1; text-align: center;">
+                <a href="https://mapmyvisitors.com/web/1c0i3" target="_blank" rel="noopener noreferrer"
+                    title="Visit tracker">
+                    <img
+                        src="https://mapmyvisitors.com/map.png?cl=7f5e2f&w=500&t=tt&d=TuKguAwDVF-AYoVCxeGN0dyAr5mp9qWMBD20OvyLtCc&co=f9f9f9&ct=5101a5" />
+                </a>
+            </div>-->
+            <!--<div style="flex: 1;">
+                <h3>.</h3>
+                <p>.</p>
+            </div>-->
+        </div>
+    </section>
+
+    <section id="research">
+        <h2 id="overview">Overview</h2>
+
+        <p>
+            We have a long-standing dedication to research excellence
+            in biology. We focus on <strong>genomics and genetics of plant-host adaptation
+                and mite-plant interactions</strong>. Building on decades of fundamental
+            research—including the pioneering sequencing of the Two-Spotted Spider
+            Mite (<i>Tetranychus urticae</i>) genome—we have developed innovative diagnostic
+            tools for quick <strong>pesticide resistance assessment</strong>, along with <strong>RNAi-based
+                bioacaricides</strong> to control mite-resistant populations.
+        </p>
+
+
+        <br>
+        <h2 id="labstreams">Lab Streams</h2>
+        <p class="research-intro">
+            Our research integrates molecular biology, genomics, evolution, and applied agricultural science to
+            understand spider mite biology and improve sustainable pest management.
+        </p>
+
+        <div class="research-streams">
+
+            <article class="research-card">
+                <div class="research-card-top">
+                    <div class="research-text">
+                        <h3>Plant–Herbivore Interactions and Adaptation</h3>
+                        <p class="research-short">
+                            Understanding how spider mites adapt to different host plants through molecular, metabolic,
+                            and evolutionary mechanisms.
+                        </p>
+                    </div>
+                    <div class="research-toggle" aria-hidden="true">+</div>
+                </div>
+
+                <figure class="research-figure">
+                    <img src="Images/placeholder1.jpg" alt="Plant-herbivore interactions" class="research-image">
+                    <figcaption>Image sugestions?</figcaption>
+                </figure>
+
+                <div class="research-details">
+                    <p>
+                        We investigate how spider mites interact with and adapt to diverse host plants, integrating
+                        metabolomics, gene expression, and ecological perspectives to understand plant defense and
+                        herbivore counteradaptation.
+                    </p>
+                    <ul>
+                        <li>Host adaptation and specialization</li>
+                        <li>Plant defense and mite counterdefense</li>
+                        <li>Metabolomics and molecular interaction</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="research-card">
+                <div class="research-card-top">
+                    <div class="research-text">
+                        <h3>Functional Genomics and Digestive Physiology</h3>
+                        <p class="research-short">
+                            Exploring digestive function, gene activity, and physiological mechanisms that shape spider
+                            mite biology.
+                        </p>
+                    </div>
+                    <div class="research-toggle" aria-hidden="true">+</div>
+                </div>
+
+                <figure class="research-figure">
+                    <img src="Images/placeholder2.jpg" alt="Functional genomics and digestive physiology"
+                        class="research-image">
+                    <figcaption>Image sugestions?</figcaption>
+                </figure>
+
+                <div class="research-details">
+                    <p>
+                        We use functional genomics and molecular tools, including in situ hybridization and related
+                        approaches, to study digestive biology and gene function in spider mites.
+                    </p>
+                    <ul>
+                        <li>Digestive physiology</li>
+                        <li>Gene function and expression</li>
+                        <li>Molecular and reverse-genetics</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="research-card">
+                <div class="research-card-top">
+                    <div class="research-text">
+                        <h3>Pesticide Resistance</h3>
+                        <p class="research-short">
+                            Investigating the genetic, biochemical, and evolutionary basis of resistance to improve
+                            monitoring and management.
+                        </p>
+                    </div>
+                    <div class="research-toggle" aria-hidden="true">+</div>
+                </div>
+
+                <figure class="research-figure">
+                    <img src="Images/placeholder3.jpg" alt="Pesticide resistance research" class="research-image">
+                    <figcaption>Image sugestions?</figcaption>
+                </figure>
+
+                <div class="research-details">
+                    <p>
+                        We study how resistance evolves in mite populations and develop tools that help detect, monitor,
+                        and interpret pesticide resistance in applied agricultural contexts.
+                    </p>
+                    <ul>
+                        <li>Resistance detection and monitoring</li>
+                        <li>Evolutionary dynamics of adaptation</li>
+                        <li>Applied diagnostics for management decisions</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="research-card">
+                <div class="research-card-top">
+                    <div class="research-text">
+                        <h3>Species Characterization</h3>
+                        <p class="research-short">
+                            Advancing the identification and characterization of tetranychid diversity to support
+                            species-level pest management.
+                        </p>
+                    </div>
+                    <div class="research-toggle" aria-hidden="true">+</div>
+                </div>
+
+                <figure class="research-figure">
+                    <img src="Images/placeholder4.jpg" alt="Species characterization research" class="research-image">
+                    <figcaption>Image sugestions?</figcaption>
+                </figure>
+
+                <div class="research-details">
+                    <p>
+                        We are pioneering the identification and characterization of new tetranychid species in Ontario
+                        through an integrated approach combining traditional morphology-based taxonomy and molecular
+                        tools, supporting more accurate species-level pest management.
+                    </p>
+                    <ul>
+                        <li>Traditional and molecular taxonomy</li>
+                        <li>New species discovery and characterization</li>
+                        <li>Species-specific agricultural relevance</li>
+                    </ul>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <section id="people">
+        <!-- ================= MENTORS ================= -->
+        <h2 id="mentors">Mentors</h2>
+
+        <!--Dr. Vojislava Grbić-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="https://scholar.google.com/citations?user=eNmj7xcAAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                    rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Vojislava Grbić</strong></a>
+                <p><strong><i>Professor</i></strong> | <strong><i>PI</i></strong>
+
+
+                <ul>
+                    Dr. Vojislava Grbić is an expert in plant–herbivore interactions, molecular plant biology,
+                    and spider mite genomics. Her research integrates genomics, metabolomics, and molecular tools
+                    to uncover the mechanisms of mite adaptation, pesticide resistance, and plant defense, as well
+                    as to advance <i>Tetranychus urticae</i> as a chelicerate model organism. She also contributes to
+                    the
+                    identification and characterization, and assessment of pest potential of emerging mite species,
+                    working closely with government agencies, industry partners, and Ontario’s growers to develop
+                    science-based spider mite management strategies that support sustainable agriculture in Canada.
+                </ul>
+                </p>
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Arabidopsis developmental genetics</li>
+                    <li>Genomics of plant-pest interaction</li>
+                    <li>Spider mite biology and evolution</li>
+                    <li>Pesticide resistance mechanisms</li>
+                    <li>Plant defense responses</li>
+                    <li>Biotechnology</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>PhD (Genetics), University of Wisconsin</li>
+                    <li>MSc (Plant Genetics), University of Novi Sad</li>
+                    <li>BSc (Plant Breeding), University of Novi Sad</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Teaching</strong>
+                <ul>
+                    <li>Biology 3593B – Genetic Engineering</li>
+                    <li>Biology 4950G – Seminar in Genetics</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="vgrbic@uwo.ca" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-at"></i></a>
+                    <a href="https://ca.linkedin.com/in/vojislava-grbic-6a653b104" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://scholar.google.com/citations?user=eNmj7xcAAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.researchgate.net/profile/Vojislava-Grbic" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/V_Grbic.jpg" alt="Dr. Vojislava Grbić">
+            </div>
+        </div>
+
+
+        <!--Dr. Miodrag Grbić-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="https://scholar.google.com/citations?user=rdmiDT4AAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                    rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Miodrag Grbić</strong>
+                </a>
+                <p><strong><i>Professor</i></strong>
+
+
+                <ul>
+                    Dr. Miodrag Grbić is a leading expert in arthropod genomics and plant–herbivore interactions.
+                    His group has developed <em>Tetranychus urticae</em> (Two-Spotted Spider Mite) as a model arthropod
+                    herbivore,
+                    studying its rapid life cycle, host range of over 1000 plants, and mechanisms of pesticide
+                    resistance.
+                    His research integrates genomics, metabolomics, and molecular tools to advance spider mite biology,
+                    genome analysis, environmentally sound pest control strategies, and biotechnology applications for
+                    sustainable agriculture.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Arthropod genomics and spider mite biology</li>
+                    <li>Evolution of developmental mechanisms</li>
+                    <li>RNAi-based pest control</li>
+                    <li>Spider mite silk as natural bionanomaterial</li>
+                    <li>Molecular plant–herbivore interactions</li>
+                    <li>Biotechnology applications for sustainable agriculture</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>Assistant Professor, Department of Biology, University of Western Ontario, Canada (1997–2003)
+                    </li>
+                    <li>Adjunct Professor, Wayne State University, USA (2003–present)</li>
+                    <li>Human Frontier Postdoctoral Fellow, Univ. of Cambridge, UK (1996–1998)</li>
+                    <li>NSF Postdoctoral Fellow, University of Wisconsin, Madison, USA (1995–1996)</li>
+                    <li>Ph.D. Developmental Biology & Entomology, University of Wisconsin, Madison, USA (1989–1995)</li>
+                    <li>M.Sc. Entomology, University of Novi Sad, Yugoslavia (1985–1988)</li>
+                    <li>B.Sc. Entomology, University of Novi Sad, Yugoslavia (1979–1983)</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Teaching</strong>
+                <ul>
+                    <li>Biology 4510G – Selected Topics in Genetics</li>
+                    <li>Biology 4560B – Human Molecular Genetics</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mgrbic@uwo.ca" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-at"></i></a>
+                    <a href="https://www.linkedin.com/in/username" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://scholar.google.com/citations?user=rdmiDT4AAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.researchgate.net/scientific-contributions/Miodrag-Grbic-71545201"
+                        target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/M_Grbic.jpg" alt="Dr. Miodrag Grbić">
+            </div>
+        </div>
+
+        <!--Dr. Vladimir Zhurov-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="https://scholar.google.com/citations?user=rdmiDT4AAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                    rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Vladimir Zhurov</strong>
+                </a>
+                <p><strong><i>Research Scientist</i></strong>
+
+
+                <ul>
+                    Dr. Vladimir Zhurov is a Research Scientist at Western University with extensive experience in
+                    genomics and molecular biology, particularly in studying plant–pest interactions. He has been part
+                    of the
+                    Genomics in Agricultural Pest Management (GAP-M) consortium, contributing to comparative genomics
+                    and
+                    transcriptomics of spider mites. His research integrates RNAi methodologies for pest control, genome
+                    optical
+                    mapping, and bioinformatic analyses.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Functional genomics</li>
+                    <li>Molecular biology</li>
+                    <li>Plant–pest interactions</li>
+                    <li>RNA interference (RNAi)</li>
+                    <li>Bioinformatics</li>
+                    <li>Experimental design and data analysis</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>Research Scientist, Department of Biology, University of Western Ontario, Canada (2023 –
+                        Present)</li>
+                    <li>Research Associate, Department of Biology, University of Western Ontario, Canada (2012 – 2023)
+                    </li>
+                    <li>Postdoctoral Fellow, Department of Biology, University of Western Ontario, Canada (2010 – 2012)
+                    </li>
+                    <li>Postdoctoral Associate, Robarts Research Institute, Canada (2006 – 2010)</li>
+                    <li>PhD in Biology, Western University (2005)</li>
+                    <li>MSc in Biology, Western University (2001)</li>
+                    <li>BSc in Biology, St. Petersburg State University (1997)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="vzhurov2@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://ca.linkedin.com/in/vzhurov" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://scholar.google.com/citations?user=88Qx3JUAAAAJ&hl=en" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.researchgate.net/profile/Vladimir-Zhurov" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/V_Zhurov.jpg" alt="Dr. Vladimir Zhurov">
+            </div>
+        </div>
+
+
+        <!-- ================= POSTDOCS ================= -->
+        <br>
+        <h2 id="postdocs">Postdoctoral Fellows</h2>
+
+        <!--Dr. Postdoc 1-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Kristie Bruinsma</strong>
+                </a>
+                <p><strong><i>Alumni/Affiliate Researcher</strong><br>(currently a postdoc at the University of La
+                    Rioja, Spain)</i></p>
+
+                <p>
+                <ul>
+                    I study plant-herbivore interaction for the purpose of identifying effective plant defence responses
+                    against pests and appropriate molecular targets of pests that can be used in developing plant
+                    protection strategies. My work has focused on identifying defences that act directly against the
+                    herbivore <i>Tetranychus urticae</i> (two-spotted spider mite). My past research involved
+                    characterization
+                    of spider mite strains following adaptation to new hosts, including Arabidopsis thaliana (thale
+                    cress), and Solanum lycopersicum (tomato) and looking into what mechanisms are involved in the
+                    adaptiation process. To do this work, I have gained expertise in many techniques used in molecular
+                    genetics research, including transcriptomics, RT-qPCR, and reverse genetics technology like
+                    environmental RNAi. My goal is to encorporate the findings of my research into the generation of
+                    pest-resistant crop varieties and/or protection agents to be used in Integrated Pest Management
+                    (IPM) strategies.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>dsRNA pesticide research</li>
+                    I am working towards understanding the variables that need to be considered in generating an
+                    effective RNAi based pesticide against spider mites, including route of exposure and window of
+                    effectiveness experiments.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc, MSc, PhD (Western University, Canada)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="https://www.researchgate.net/profile/Kristie_Bruinsma" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                    <a href="https://orcid.org/0000-0001-7913-7920" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-brands fa-orcid">
+                        </i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/K_Bruinsma.jpg" alt="Dr. Postdoc 1">
+            </div>
+        </div>
+
+        <!--Dr. Postdoc 2-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Joseane Moreira do Nascimento</strong>
+                </a>
+                <p><strong><i>Postdoctoral Associate</strong></i></p>
+
+                <p>
+                <ul>
+                    I am currently a Postdoctoral Associate with expertise in biotechnology, leading our lab’s pesticide
+                    resistance project, where we develop molecular tools to detect and monitor mite resistance. I am
+                    also involved in studying the population dynamics of spider mites in greenhouse and soybean
+                    production, which recently led to the discovery of a new spider mite species! Alongside these
+                    projects, I’m heavily involved in developing RNAi-based acaricides in collaboration with GreenLight
+                    Biosciences. I also love teaching, and I’ve had the opportunity to train over 10 undergraduate
+                    students in the lab. I’m passionate about research that brings practical solutions to growers and
+                    the agricultural community.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Mite resistance to pesticides</li>
+                    <li>RNAi-based acaricides</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc in Biology, MSc and PhD in Biotechnology (University of Taquari Valley - Lajeado, Rio Grande
+                        do Sul, Brazil)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/joseane-nascimento-phd-052b3772/" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.researchgate.net/profile/Joseane-Nascimento?ev=hdr_xprf" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/J_Nascimento.JPG" alt="Dr. Postdoc 2">
+            </div>
+        </div>
+
+        <!--Dr. Postdoc 3-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Dr. Julia Pastor Fernandez</strong>
+                </a>
+                <p><strong><i>Postdoctoral Fellow</strong></i></p>
+
+                <p>
+                <ul>
+                    I am a research scientist working on the study of plant–pathogen and plant–pest interactions, aiming
+                    to
+                    develop innovative and sustainable solutions for crop protection. Currently, my research focuses on
+                    understanding
+                    plant defense responses against spider mites, as well as the strategies mites use to cope with plant
+                    toxic compounds.
+                    To address these questions, I use a combination of molecular and biotechnological approaches,
+                    including gene
+                    expression analysis, metabolomic profiling, and reverse genetics. My aim is to contribute to the
+                    development of
+                    innovative strategies for improved plant resilience and crop protection.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Molecular biology</li>
+                    <li>Targeted and untargeted metabolomics</li>
+                    <li>RNAi-based reverse genetics</li>
+                    <li>Plant-pest and plant-pathogen interaction</li>
+                    <li>Plant Induced-Resistance and Priming</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>Postdoctoral associate at the National Centre for Biotechnology (Madrid, Spain)</li>
+                    <li>PhD in Plant biology and crop protection (Universitat Jaume I, Spain)</li>
+                    <li>MSc in Agrobiotechnology (Universidad de Salamanca, Spain)</li>
+                    <li>BSc in Agrifood engineering (Universitat Jaume I, Spain)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="https://ca.linkedin.com/in/julia-pastor-fern%C3%A1ndez-940008180/en" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://scholar.google.com/citations?user=ZizK6jYAAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <!--<a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>-->
+                    <!--<a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-orcid">
+                    </i></a>-->
+                    <!--<a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>-->
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/J_Pastor.jpeg" alt="Dr. Postdoc 3">
+            </div>
+        </div>
+
+        <!-- ================= TECHNICIANS ================= -->
+        <!--Lab Tech-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Reagan Michiels</strong>
+                </a>
+                <p><strong><i>BSc in Biology|Research Assistant</i></strong><br>
+                    <i>Cell and Molecular Biology</i>
+                </p>
+
+                <p>
+                <ul>
+                    I am a Research Assistant in the lab’s pesticide resistance group. My primary project focuses on
+                    developing
+                    a molecular diagnostic assay (allele-specific qPCR) targeting a resistance-conferring SNP to rapidly
+                    detect
+                    etoxazole resistance in populations of two-spotted spider mites. In addition to this work, I conduct
+                    various
+                    molecular analyses and bioassays to detect resistance to multiple pesticides in mite populations.
+                    Growing up on
+                    a cash crop farm, I have seen firsthand the impact that mites and other pests can have on crop
+                    quality and yields,
+                    motivating my interest in developing practical, genetics-based tools for integrated pest management.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Molecular diagnostics</li>
+                    <li>Pesticide resistance</li>
+                    <li>Integrated Pest Management</li>
+                    <li>RNAi-based acaricides</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc in Biology, Honours Specialization in Genetics from University of Western Ontario</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mailto:rmichie4@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://ca.linkedin.com/in/reagan-michiels-7b79" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <!--<a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>-->
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/R_Michiels.png" alt="Lab Technician">
+            </div>
+        </div>
+
+        <!-- ================= STUDENTS ================= -->
+
+        <br>
+        <h2 id="students">Students</h2>
+
+        <!--Grad Student 1-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Jorden Mikaela Maglov</strong>
+                </a>
+                <p><strong><i>PhD Candidate</i></strong><br>
+                    <i>Cell and Molecular Biology</i>
+                </p>
+
+                <p>
+                <ul>
+                    I study Arabidopsis-mite interactions. On the plant side, I am investigating
+                    the chemical complexity of Arabidopsis defenses, with a focus on phenylpropanoids
+                    and flavonoids. I use metabolomics and toxicity screens to identify chemical defenses.
+                    Conversely, I am also studying mite counteradaptations to plant chemical defenses,
+                    with a focus on mite intradiol dioxygenases. I use RNAi as a reverse genetics tool to
+                    study the function of these enzymes.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Untargeted metabolomics</li>
+                    <li>Targeted metabolomics</li>
+                    <li>Phytochemistry</li>
+                    <li>RNAi</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc in Biology, Honors Specialization in Genetics (Western University, Canada)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mailto:jmaglov@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://www.linkedin.com/in/jorden-maglov-193b33159" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/J_Maglov.jpg" alt="Graduate Student 1">
+            </div>
+        </div>
+
+        <!--Grad Student 3-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Michele Antonacci</strong>
+                </a>
+                <p><strong><i>Agronomist | PhD Candidate</i></strong><br>
+                    <i>Cell and Molecular Biology</i>
+                </p>
+
+                <p>
+                    <strong>Project:</strong> Indole glucosinolate-derived products as Arabidopsis
+                    defenses and the GST-mediated detoxification response in the Two-Spotted
+                    Spider Mite (<i>Tetranychus urticae</i>).
+                <ul>
+                    My project investigates which indole glucosinolate-derived products (IGDs)
+                    contribute to the defense of Arabidopsis against the two-spotted spider mite
+                    (TSSM), as well as how TSSM counteracts these chemical barriers. To identify key
+                    defensive metabolites, I use <i>Arabidopsis</i> mutants with modified IGD profiles,
+                    combined with the oral delivery of individual IGDs to the mites, to assess their
+                    biological impact. We apply metabolomic profiling of mite extracts to characterize
+                    compound modifications and detoxification pathways. Additionally, candidate
+                    detoxification genes are further studied through environmental RNA interference.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Molecular biology</li>
+                    <li>RNAi-based reverse-genetics</li>
+                    <li>Targeted and untargeted metabolomics</li>
+                    <li>Plant-herbivore interactions</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc in Agricultural Science and Technologies (University of Bari Aldo Moro, Italy)</li>
+                    <li>MSc in Plant Medicine (University of Bari Aldo Moro, Italy)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mailto:mantonac@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://ca.linkedin.com/in/michele-antonacci-1996909b" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.researchgate.net/profile/Michele-Antonacci-2?ev=hdr_xprf" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/M_Antonacci.jpg" alt="Graduate Student 3">
+            </div>
+        </div>
+
+        <!--Grad Student 4-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Mikaelison da Silva Lima</strong>
+                </a>
+                <p><strong><i>Entomologist | PhD Candidate</i></strong><br>
+                    <i>Ecology and Evolution</i>
+                </p>
+
+                <p>
+                    <strong>Project:</strong> Characterization of the growing diversity of spider mite
+                    pest species in southeastern Ontario agriculture.
+                <ul>
+                    My project explores the spider mite pest community in Ontario by analyzing their life
+                    traits and damage patterns, while employing molecular tools to identify species and evaluate
+                    their resistance to both synthetic and RNAi-based pesticides.
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Integrated Pest Management</li>
+                    <li>Life-History Traits</li>
+                    <li>Plant–Mite Interactions</li>
+                    <li>Pesticide Resistance (Synthetic and RNAi-Based)</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li>BSc in Agronomy (Federal University of Viçosa, Brazil)</li>
+                    <li>MSc in Entomology (University of Nebraska-Lincoln, United States)</li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mailto:mdasil66@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://ca.linkedin.com/in/mikaelison-lima-68b888143/pt" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://orcid.org/0000-0002-6304-3847" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-brands fa-orcid"></i></a>
+                    <a href="https://scholar.google.com/citations?user=NMTO-YUAAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.researchgate.net/profile/Mikaelison-Da-S-Lima" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/M_Lima.jpeg" alt="Graduate Student 4">
+            </div>
+        </div>
+
+        <!--Grad Student 5-->
+        <div class="team-member-right">
+            <div class="member-info">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
+                    <strong>Uliana Galaktionova</strong>
+                </a>
+                <p><strong><i>MSc Student</i></strong><br>
+                    <i>Cell and Molecular Biology</i>
+                </p>
+
+                <p>
+                <ul>
+
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Research Areas</strong>
+                <ul>
+                    <li>Plant-Pest Interaction</li>
+                </ul>
+                </p>
+
+                <p>
+                    <strong>Degrees and Institutions</strong>
+                <ul>
+                    <li></li>
+                </ul>
+                </p>
+
+                <div class="social-icons">
+                    <a href="mailto:ugalakti@uwo.ca" target="_blank" rel="noopener noreferrer"><i
+                            class="fa-solid fa-at"></i></a>
+                    <a href="https://www.linkedin.com/in/uliana-galaktionova/" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.researchgate.net/profile/Uliana-Galaktionova" target="_blank"
+                        rel="noopener noreferrer"><i class="fa-brands fa-researchgate"></i></a>
+                </div>
+            </div>
+            <div class="member-photo">
+                <img src="Images/People/U_Galaktionova.jpg" alt="Graduate Student 5">
+            </div>
+        </div>
+
+        <!-- ================= PETS ================= -->
+        <br>
+        <h2 id="pets">Lab Pets</h2>
+
+        <div class="pets-grid">
+            <!-- Pet 1 -->
+            <div class="pet-item">
+                <div class="pet-photo">
+                    <img src="Images/People/Pets/Vera.jpg" alt="Pet 1">
+                </div>
+                <div class="pet-info">
+                    <p class="pet-name"><strong>Vera</strong></p>
+                    <p class="pet-activity">Expertise in napping near a human (PS: any human!).</p>
+                </div>
+            </div>
+
+            <!-- Pet 2 -->
+            <div class="pet-item">
+                <div class="pet-photo">
+                    <img src="Images/People/Pets/Scooby.jpg" alt="Pet 2">
+                </div>
+                <div class="pet-info">
+                    <p class="pet-name"><strong>Scooby</strong></p>
+                    <p class="pet-activity">Expertise in purring and being cute.</p>
+                </div>
+            </div>
+
+            <!-- Pet 3 -->
+            <div class="pet-item">
+                <div class="pet-photo">
+                    <img src="Images/People/Pets/Lola.jpg" alt="Pet 3">
+                </div>
+                <div class="pet-info">
+                    <p class="pet-name"><strong>Lola</strong></p>
+                    <p class="pet-activity">Expertise: Sweet potato connoisseur.</p>
+                </div>
+            </div>
+
+            <!-- Pet 4 -->
+            <div class="pet-item">
+                <div class="pet-photo">
+                    <img src="Images/People/Pets/Floki.jpg" alt="Pet 4">
+                </div>
+                <div class="pet-info">
+                    <p class="pet-name"><strong>Floki</strong></p>
+                    <p class="pet-activity">Expertise in drama performance (and spreading fur around the house in free
+                        time).</p>
+                </div>
+            </div>
+            <!-- Add more pets here -->
+        </div>
+
+
+
+
+        <!-- ================= ALUMNI ================= 
+
+        <br>
+        <h2 id="alumni">Alumni</h2>
+
+        <h3>Postdoctoral Fellows</h3>
+        <div>
+            <p><strong><i>Postdoctoral Fellows, Postdoctoral Assistants and Visiting Students</i></strong></p>
+            <ul>
+                <li>
+                    <p><strong>Person1's name</strong> - date | Project: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Project (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person2's name</strong> - date | Project: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Project (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person3's name</strong> - date | Project: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Project (link)</a>
+                    </p>
+                </li>
+            </ul>
+        </div><br>
+
+        <h3>PhD Students</h3>
+        <div>
+            <p><strong><i>PhD Students</i></strong></p>
+            <ul>
+                <li>
+                    <p><strong>Person1's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person2's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person3's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+            </ul>
+        </div><br>
+
+        <h3>MSc Students</h3>
+        <div>
+            <p><strong><i>MSc Students</i></strong></p>
+            <ul>
+                <li>
+                    <p><strong>Person1's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person2's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person3's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+            </ul>
+        </div><br>
+
+        <h3>BSc Honour's Students</h3>
+        <div>
+            <p><strong>BSc Honour's Students</strong></p>
+            <ul>
+                <li>
+                    <p><strong>Person1's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person2's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+                <li>
+                    <p><strong>Person3's name</strong> - date | Thesis: <a href="#" target="_blank"
+                            rel="noopener noreferrer" style="color: purple;">Thesis name (link)</a>
+                    </p>
+                </li>
+            </ul>
+        </div>-->
+    </section>
+
+    <section id="services">
+        <h2 id="services">Services</h2>
+        <p class="services-intro">
+            We collaborate with farmers, growers, industry, and government partners to support spider
+            mite monitoring, diagnostics, and management in agricultural systems.
+        </p>
+
+        <div class="services-grid">
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fa-solid fa-shield-virus"></i>
+                </div>
+                <div class="service-card-content">
+                    <h3>Assessment of Pesticide Resistance Status</h3>
+                    <p class="service-subtitle">
+                        Diagnostic support for <em>Tetranychus urticae</em> populations and related species.
+                    </p>
+                    <p>
+                        We assist in assessing resistance status in spider mite populations in both the field and
+                        greenhouses,
+                        using toxicological bioassays and molecular analyses. Our results support evidence-based pest
+                        management
+                        strategies, tailoring monitoring and promoting sustainability within agricultural systems.
+                    </p>
+                    <ul class="service-points">
+                        <li>Resistance screening support</li>
+                        <li>Top-notch molecular approach</li>
+                        <li>Useful for growers and collaborators</li>
+                    </ul>
+                    <a href="#contact" class="service-btn go-to-contact">Contact us about this service</a>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fa-solid fa-microscope"></i>
+                </div>
+                <div class="service-card-content">
+                    <h3>Species Identification</h3>
+                    <p class="service-subtitle">
+                        Identification and characterization of tetranychid pest biodiversity.
+                    </p>
+                    <p>
+                        We are pioneering the identification and characterization of new spider mite species in Ontario
+                        agricultural systems.
+                        By combining traditional morphology-based with molecular taxonomy, we support accurate
+                        species-level identification and
+                        targeted species-specific pest management strategies.
+                    </p>
+                    <ul class="service-points">
+                        <li>Species-level identification</li>
+                        <li>Biodiversity and pest characterization</li>
+                        <li>IPM-oriented interpretation</li>
+                    </ul>
+                    <a href="#contact" class="service-btn go-to-contact">Contact us about this service</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="opportunities">
+        <h2 id="opportunities">Opportunities - We are hiring!</h2>
+        <p>
+            You can email me (<a href="https://www.uwo.ca/biology//people/faculty.html#Vojislava%20Grbic"
+                target="_blank" rel="noopener noreferrer" style="color: purple;">Dr. Vojislava Grbić</a>)
+            for information about available positions, but please review
+            the details below and the Western’s Biology Prospective Graduate Student <a
+                href="https://www.uwo.ca/biology//graduate/future-students/admission-requirements.html" target="_blank"
+                rel="noopener noreferrer" style="color: purple;"> webpage</a> to make sure you
+            meet the qualifications for the Biology program.
+        </p>
+        <div>
+            <strong>Current Open Positions</strong>
+            <ul>
+                <li>
+                    <a href="Attachments/PhD_Position.pdf" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">PhD</a>
+                </li>
+                <li>
+                    <a href="Attachments/PhD_Position.pdf" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">MSc</a>
+                </li>
+                <li>
+                    <a href="Attachments/PhD_Position.pdf" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Honour's</a>
+                </li>
+                <li>
+                    <a href="Attachments/PhD_Position.pdf" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Postdoctoral Fellow</a>
+                </li>
+            </ul>
+            <div>
+                <br><strong>General Information</strong><br>
+                <ul>
+                    <li>
+                        <p>
+                            In the Grbić Lab, we focus on applying genomics and genetics to understand
+                            mite-plant interactions, aiming to develop next-generation integrated pest
+                            management strategies tailored for sustainable agriculture. Our research
+                            combines cutting-edge science with practical agricultural impact. </p>
+                    </li>
+                    <li>
+                        <p>
+                            We highly value collaborative teamwork, where every member takes ownership
+                            of their projects and contributes actively to our collective success.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            A strong attitude of curiosity and a desire for continuous learning
+                            are essential qualities in our lab.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            We encourage motivated students and colleagues to engage deeply in research,
+                            helping develop their skills and fostering an environment of dynamic
+                            collaboration. Our lab believes in mentoring hands-on researchers who
+                            are eager to grow both academically and professionally, sharing ideas and
+                            advancing the field together.
+                        </p>
+                    </li>
+                </ul>
+
+                <br><strong>Lab Values and Expectations</strong>
+                <ul>
+                    <li>
+                        <p>
+                            Inclusivity and diversity are fundamental principles in our team. We prioritize
+                            open, respectful collaboration among students and colleagues from all backgrounds
+                            and many countries, reflecting our commitment to a multicultural environment.
+                        </p>
+                    </li>
+                    <li>
+                        <p> Prospective members should come prepared with enthusiasm for scientific inquiry,
+                            readiness for hands-on work, and the initiative to independently learn new techniques.
+                            Ownership of projects and proactive communication are key to thriving here.
+                        </p>
+                    </li>
+                    <li>
+                        <p>Commitment to academic excellence, paired with strong teamwork skills and a
+                            proactive approach to challenges, shapes the foundation of our lab culture.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+    </section>
+
+    <section id="publications">
+        <h2 id="highlights">Highlights</h2>
+        <ul>
+            <li>
+                <p>Mity model: <i>Tetranychus urticae</i>, a candidate for chelicerate model organism (<a
+                        href="https://onlinelibrary.wiley.com/doi/abs/10.1002/bies.20564?casa_token=vUE5z67bqwsAAAAA:BEl66dX5zaVuAkFF4KVCs1LXIIplGyKETjtYHKa8QHEyotV3cqikSRY14g39XY5VMBGw9SgZo5tQJeEz"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Grbic, M., et al., 2007</a>)
+                </p>
+            </li>
+            <li>
+                <p>The genome of <i>Tetranychus urticae</i> reveals herbivorous pest adaptations (<a
+                        href="https://www.nature.com/articles/nature10640" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Grbic, M., et al., 2011</a>)
+                </p>
+            </li>
+            <li>
+                <p>Plant-Herbivore Interactions: A Case of an Extreme Generalist, the Two-Spotted Spider Mite
+                    <i>Tetranychus urticae</i> (<a
+                        href="https://apsjournals.apsnet.org/doi/full/10.1094/MPMI-07-17-0168-CR" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">Santamaria, M. E., et al., 2013</a>)
+                </p>
+            </li>
+            <li>
+                <p>Rapid specialization of counter defenses enables two-spotted spider mite to adapt to novel plant
+                    hosts (<a href="https://academic.oup.com/plphys/article/187/4/2608/6360475" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">Salehipourshirazi, G., et al., 2021</a>)
+                </p>
+            </li>
+            <li>
+                <p>Host adaptation and specialization in Tetranychidae mites (<a
+                        href="AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAA2owggNmBgkqhkiG9w0BBwagggNXMIIDUwIBADCCA0wGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMq0OmggfcG8_q0"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Bruinsma, K., et al., 2023</a>)
+                </p>
+            </li>
+        </ul>
+
+        <br>
+        <h2 id="allpublications">All Publications</h2>
+        <p><a href="https://scholar.google.com/citations?user=eNmj7xcAAAAJ&hl=pt-BR&oi=ao" target="_blank"
+                style="text-decoration:none;">
+                <button type="button" style="padding: 4px 8px; font-size: 13px; cursor: pointer; text-transform: none;">
+                    Find more of our work on Google Scholar
+                </button>
+            </a>
+        </p>
+    </section>
+
+    <section id="links">
+        <h2 id="spidermites">Spider Mites</h2>
+        <ul>
+            <li>
+                <p>The complete genome of <i>Tetranychus urticae</i> (<a
+                        href="https://www.nature.com/articles/nature10640" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Grbić et al., 2011</a>)
+                </p>
+            </li>
+
+            <li>
+                <p>A comprehensive database for the Tetranychidae (<a href="https://www.nature.com/articles/nature10640"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Spider Mites Web</a>)
+                </p>
+            </li>
+            <li>
+                <p>Web-Spinning Spider Mite Factsheet (<a
+                        href="https://extension.usu.edu/planthealth/uppdl/files/factsheet/web-spinning-spider-mite97.pdf"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Alston et al., 2011</a>)
+                </p>
+            </li>
+            <li>
+                <p>GreenLight Biosciences (<a
+                        href="https://www.greenlightbiosciences.com/articles/in-the-pipeline-two-spotted-spider-mite"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">In the pipeline</a>)
+                </p>
+            </li>
+            <li>
+                <p>Mites: Ecology, Evolution & Behaviour: Life at a Microscale (<a
+                        href="https://books.google.ca/books?id=kRHHBAAAQBAJ&printsec=copyright&redir_esc=y#v=onepage&q&f=false"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Walter, D. E., & Proctor, H. C.
+                        1999</a>)
+                </p>
+            </li>
+        </ul>
+
+        <br>
+        <h2 id="scientificwriting">Scientific Writing and Communication</h2>
+        <ul>
+            <li>
+                <p>Why you should write your PhD thesis backwards (<a
+                        href="https://www.nature.com/articles/d41586-025-01061-8" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">Toivonen, T., 2025</a>)
+                </p>
+            </li>
+            <li>
+                <p>How to write a first-class paper (<a href="https://www.nature.com/articles/d41586-018-02404-4"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Gewin, V., 2018</a>)
+                </p>
+            </li>
+            <li>
+                <p>10 Tips for Improving Your Public Speaking Skills (<a
+                        href="https://professional.dce.harvard.edu/blog/10-tips-for-improving-your-public-speaking-skills/"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Harvard DCE, North, M.,
+                        2024</a>)
+                </p>
+            </li>
+            <li>
+                <p>How to make a great presentation (<a
+                        href="https://www.ted.com/playlists/574/how_to_make_a_great_presentation" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">TED Talks</a>)
+                </p>
+            </li>
+            <li>
+                <p>The first 20 hours - how to learn anything (<a href="https://www.youtube.com/watch?v=5MgBikgcWnY"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">TEDx Talks, 2013</a>)
+                </p>
+            </li>
+        </ul>
+
+        <br>
+        <h2 id="experimentation">Experimentation, Statistics and Data Analysis</h2>
+        <ul>
+            <li>
+                <p>Experimental Design and Statistical Methods (Belzile, Léo., 2025|<a
+                        href="https://lbelzile.github.io/math80667a/" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">webbook</a>,<a
+                        href="hhttps://lbelzile.github.io/math80667a/MATH80667A-EDSM.pdf" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;"> textbook</a>)
+                </p>
+            </li>
+            <li>
+                <p>Experimental Design and Analysis (<a href="https://www.stat.cmu.edu/~hseltman/309/Book/Book.pdf"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Seltman, H. J., 2018</a>)
+                </p>
+            </li>
+            <li>
+                <p>How thoughtful experimental design can empower biologists in the omics era (<a
+                        href="https://www.nature.com/articles/s41467-025-62616-x" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">Wagner, M. R., and Kleiner, M., 2025</a>)
+                </p>
+            </li>
+            <li>
+                <p>R for Data Science (<a href="http://r4ds.hadley.nz/" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Wickham, H., and Grolemund, G., 2023</a>)
+                </p>
+            </li>
+            <li>
+                <p>Hands-On Programming with R - RStudio Education (<a href="https://rstudio-education.github.io/hopr/"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">Grolemund, G., 2014</a>)
+                </p>
+            </li>
+            <li>
+                <p>QIAGEN Knowledge Hub (<a href="https://www.qiagen.com/us/knowledge-and-support/knowledge-hub"
+                        target="_blank" rel="noopener noreferrer" style="color: purple;">QIAGEN</a>)
+                </p>
+            </li>
+            <li>
+                <p>OrcAE - Online Resource for Community Annotation of Eukaryotes (<a
+                        href="https://bioinformatics.psb.ugent.be/orcae/" target="_blank" rel="noopener noreferrer"
+                        style="color: purple;">Linsmith, G., et al., 2019</a>)
+                </p>
+            </li>
+            <li>
+                <p>BLAST - Basic Local Alignment Search Tool (<a
+                        href="https://blast.ncbi.nlm.nih.gov/Blast.cgi#alnHdr_381393164" target="_blank"
+                        rel="noopener noreferrer" style="color: purple;">Altschul, Stephen F., et al., 1990</a>)
+                </p>
+            </li>
+        </ul>
+    </section>
+
+    <section id="contact">
+        <h2>Grbić Lab</h2>
+        <ul>
+            <p>
+                <strong>Grbić Lab</strong><br>
+                Department of Biology, Western University<br>
+                1151 Richmond Street<br>
+                London, Ontario, Canada, N6A 3K7<br>
+                Tel: 519-850-2542<br>
+                Email: <a href="mailto:vgrbic@uwo.ca">vgrbic@uwo.ca</a>
+            </p>
+        </ul>
+
+        <br>
+        <h2>Got spider mites? Send us samples — we're ready to help!</h2>
+        <p>
+            If you have spider mite samples that you'd like us to analyze for pesticide resistance or
+            species identification, please check the <a href="Attachments/sampling_protocol.pdf" target="_blank"
+                rel="noopener noreferrer" style="color: purple;">sampling protocol</a> and ship them to the address
+            below.
+        </p>
+        <ul>
+            <p>
+                <strong>Courier Address</strong><br>
+                Grbic Lab<br>
+                Western University<br>
+                Science Stores<br>
+                1151 Richmond St<br>
+                Chemistry Bldg<br>
+                Rm 003, Dock 11<br>
+                London, ON N6A 5B7<br>
+            </p>
+        </ul>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; <span id="year"></span> Grbić Lab, Department of Biology, Western University, ON, Canada | All
+                Rights Reserved.</p>
+            <p>Content for research and educational purposes only.</p>
+            <p>Designed by <a
+                    href="https://scholar.google.com/citations?hl=pt-BR&user=NMTO-YUAAAAJ&view_op=list_works&gmla=AEk_c1ti9M5aQF6M_ijwb85oHjOIpKq_YYwmp9mh6qeqcEbxdxbKFYxJwhDFYfZ2gWlOtGUQIQZBmsL1y226-fd6z4E"
+                    target="_blank" rel="noopener noreferrer">Mika Lima</a>.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Place this at the bottom of your page -->
+    <button id="backToTop">Back to Top
+        <span id="backToTopIcon">↑</span>
+    </button>
+
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('carouselToggle');
+            const section = document.getElementById('carousel-section');
+            const toggleBar = document.getElementById('carouselToggleBar');
+
+            if (!toggleBtn || !section || !toggleBar) return;
+
+            // Start with ▼ (down arrow)
+            toggleBtn.textContent = '▼';
+
+            function toggleCarousel() {
+                section.classList.toggle('collapsed');
+
+                // Spin the arrow 180° smoothly
+                toggleBtn.classList.toggle('spinning');
+            }
+
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                toggleCarousel();
+            });
+
+            toggleBar.addEventListener('click', function (e) {
+                if (e.target !== toggleBtn) {
+                    toggleCarousel();
+                }
+            });
+        });
+    </script>
+
+
+
+
+    <!-- SECTION A: Main page setup (nav, carousel, pets, etc.) -->
+    <script>
+        // Auto-update year in footer
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        // Handle section visibility
+        const navItems = document.querySelectorAll('nav li[data-section]');
+        const sections = document.querySelectorAll('section');
+
+        // Set the "Welcome" section to be active by default
+        document.getElementById("welcome").classList.add('active');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.getAttribute('data-section');
+
+                // Hide all sections
+                sections.forEach(section => section.classList.remove('active'));
+
+                // Show the clicked section
+                const activeSection = document.getElementById(sectionId);
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                }
+            });
+        });
+
+        // Carousel functionality
+        const carouselImages = document.querySelector(".carousel-images");
+        const images = carouselImages.querySelectorAll("img");
+        const totalImages = images.length;
+
+        // Clone first and last images for seamless infinite loop
+        const firstClone = images[0].cloneNode(true);
+        const lastClone = images[totalImages - 1].cloneNode(true);
+
+        carouselImages.appendChild(firstClone);
+        carouselImages.insertBefore(lastClone, images[0]);
+
+        let currentIndex = 1; // Start from the first real image (after lastClone)
+
+        function showImage(index) {
+            carouselImages.style.transition = 'transform 1s ease-in-out';
+            carouselImages.style.transform = `translateX(-${100 * index}%)`;
+        }
+
+        // Listen for transition end to reset position instantly if at clone
+        carouselImages.addEventListener('transitionend', () => {
+            const imgs = carouselImages.querySelectorAll("img");
+            if (currentIndex === 0) {
+                carouselImages.style.transition = 'none';
+                currentIndex = imgs.length - 2;
+                carouselImages.style.transform = `translateX(-${100 * currentIndex}%)`;
+            }
+            if (currentIndex === imgs.length - 1) {
+                carouselImages.style.transition = 'none';
+                currentIndex = 1;
+                carouselImages.style.transform = `translateX(-${100 * currentIndex}%)`;
+            }
+        });
+
+        // Next button
+        document.getElementById("nextBtn").addEventListener("click", () => {
+            const imgs = carouselImages.querySelectorAll("img");
+            if (currentIndex >= imgs.length - 1) return; // Prevent over scroll
+            currentIndex++;
+            showImage(currentIndex);
+        });
+
+        // Prev button
+        document.getElementById("prevBtn").addEventListener("click", () => {
+            if (currentIndex <= 0) return; // Prevent under scroll
+            currentIndex--;
+            showImage(currentIndex);
+        });
+
+        // Initialize carousel position
+        showImage(currentIndex);
+
+        // Auto cycle every 4 seconds (optional)
+        setInterval(() => {
+            const imgs = carouselImages.querySelectorAll("img");
+            if (currentIndex >= imgs.length - 1) return;
+            currentIndex++;
+            showImage(currentIndex);
+        }, 8000);
+
+        // Dropdown menu functionality with toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            // Select all dropdown parent menu items
+            const dropdowns = document.querySelectorAll('nav ul li.dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function (e) {
+                    // Prevent default action and stop propagation to avoid unintended behaviors
+                    e.stopPropagation();
+
+                    // Toggle the display of the submenu
+                    const menu = this.querySelector('ul.dropdown-menu');
+                    if (menu) {
+                        menu.classList.toggle('show');
+                    }
+
+                    // Close other open dropdowns (optional)
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            const otherMenu = other.querySelector('ul.dropdown-menu');
+                            if (otherMenu) {
+                                otherMenu.classList.remove('show');
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Close dropdowns if clicking outside
+            document.addEventListener('click', function () {
+                dropdowns.forEach(dropdown => {
+                    const menu = dropdown.querySelector('ul.dropdown-menu');
+                    if (menu) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+        });
+
+        // Alternative dropdown menu functionality
+        document.querySelectorAll('nav ul li.dropdown > a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior if needed (for anchors)
+                const parentLi = link.parentElement;
+                const submenu = parentLi.querySelector('.dropdown-menu');
+
+                // Toggle the submenu visibility
+                submenu.classList.toggle('show');
+
+                // Optional: Close other open submenus
+                document.querySelectorAll('.dropdown-menu.show').forEach(other => {
+                    if (other !== submenu) {
+                        other.classList.remove('show');
+                    }
+                });
+            });
+        });
+
+        // Back to Top button functionality
+        document.getElementById("backToTop").onclick = function () {
+            document.getElementById("mainNav").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        };
+
+        // Show/Hide Back to Top button on scroll
+        window.onscroll = function () {
+            const backToTopBtn = document.getElementById('backToTop');
+            if (document.body.scrollTop > 1300 || document.documentElement.scrollTop > 1300) {
+                backToTopBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        };
+
+        // Select all pet items
+        const petItems = document.querySelectorAll('.pet-item');
+
+        // Add a click event listener to each pet item
+        petItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active'); // Toggle the active class to expand/collapse the image
+            });
+        });
+
+    </script>
+    <!-- SECTION B: Research card expand/collapse -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const researchCards = document.querySelectorAll(".research-card");
+            const researchGrid = document.querySelector(".research-streams");
+
+            researchCards.forEach(card => {
+                card.addEventListener("click", function () {
+                    const isActive = card.classList.contains("active");
+
+                    researchCards.forEach(c => c.classList.remove("active"));
+
+                    if (isActive) {
+                        researchGrid.classList.remove("has-active");
+                    } else {
+                        card.classList.add("active");
+                        researchGrid.classList.add("has-active");
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- SECTION C: Updates accordion (year + month) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearToggles = document.querySelectorAll(".update-year-toggle");
+            const monthToggles = document.querySelectorAll(".update-month-toggle");
+
+            yearToggles.forEach(toggle => {
+                toggle.addEventListener("click", function () {
+                    const yearBox = this.parentElement;
+                    yearBox.classList.toggle("open");
+                });
+            });
+
+            monthToggles.forEach(toggle => {
+                toggle.addEventListener("click", function () {
+                    const monthBox = this.parentElement;
+                    monthBox.classList.toggle("open");
+                });
+            });
+        });
+    </script>
+    <!-- SECTION D: Gallery scrolling and lightbox -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+            const lightbox = document.getElementById("galleryLightbox");
+            const lightboxImage = document.getElementById("lightboxImage");
+            const lightboxCaption = document.getElementById("lightboxCaption");
+            const closeBtn = document.getElementById("lightboxClose");
+            const prevBtn = document.getElementById("lightboxPrev");
+            const nextBtn = document.getElementById("lightboxNext");
+            const scrollLeftBtn = document.getElementById("galleryScrollLeft");
+            const scrollRightBtn = document.getElementById("galleryScrollRight");
+            const galleryStrip = document.getElementById("galleryStrip");
+
+            let currentIndex = 0;
+
+            function openLightbox(index) {
+                const item = thumbs[index];
+                const img = item.querySelector("img");
+                currentIndex = index;
+
+                lightboxImage.src = item.dataset.full;
+                lightboxImage.alt = img.alt;
+                lightboxCaption.textContent = item.dataset.caption;
+                lightbox.classList.add("open");
+                lightbox.setAttribute("aria-hidden", "false");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove("open");
+                lightbox.setAttribute("aria-hidden", "true");
+                document.body.style.overflow = "";
+            }
+
+            function showNext() {
+                currentIndex = (currentIndex + 1) % thumbs.length;
+                openLightbox(currentIndex);
+            }
+
+            function showPrev() {
+                currentIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
+                openLightbox(currentIndex);
+            }
+
+            thumbs.forEach((thumb, index) => {
+                thumb.addEventListener("click", function () {
+                    openLightbox(index);
+                });
+            });
+
+            closeBtn.addEventListener("click", closeLightbox);
+            nextBtn.addEventListener("click", showNext);
+            prevBtn.addEventListener("click", showPrev);
+
+            lightbox.addEventListener("click", function (e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (!lightbox.classList.contains("open")) return;
+
+                if (e.key === "Escape") closeLightbox();
+                if (e.key === "ArrowRight") showNext();
+                if (e.key === "ArrowLeft") showPrev();
+            });
+
+            scrollLeftBtn.addEventListener("click", function () {
+                galleryStrip.scrollBy({ left: -320, behavior: "smooth" });
+            });
+
+            scrollRightBtn.addEventListener("click", function () {
+                galleryStrip.scrollBy({ left: 320, behavior: "smooth" });
+            });
+        });
+    </script>
+    <!-- SECTION E: Services jump to contact -->
+    <script>
+        document.querySelectorAll('.go-to-contact').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                const contactSection = document.getElementById('contact');
+                if (contactSection) {
+                    contactSection.classList.add('active');
+                    history.pushState(null, '', '#contact');
+                    contactSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
