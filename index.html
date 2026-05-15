@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<main>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,21 @@
         a {
             text-decoration: none;
             color: inherit;
+        }
+
+        main {
+            position: relative;
+            z-index: 0;
+        }
+
+        main::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: url("Images/Body/iconweb.png") center/contain no-repeat;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -1;
         }
 
         /* ===== 2) Header banner ===== */
@@ -1345,6 +1361,10 @@
 
         /* Back to Top Button */
         #backToTop {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 99999;
             background-color: rgb(80, 0, 130);
             color: white;
             border: none;
@@ -1352,10 +1372,7 @@
             font-size: 16px;
             border-radius: 100px;
             cursor: pointer;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
+            display: none;
         }
 
         #backToTopIcon {
@@ -1374,14 +1391,27 @@
                 font-size: 1.8em;
             }
 
+            nav {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
             nav ul {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 0 10px;
+            }
+
+            nav li {
+                flex-shrink: 0;
             }
 
             nav li ul {
                 position: static;
             }
         }
+        
     </style>
 </head>
 
@@ -2176,7 +2206,7 @@
                 <a href="#" target="_blank" rel="noopener noreferrer" class="member-name">
                     <strong>Dr. Joseane Moreira do Nascimento</strong>
                 </a>
-                <p><strong><i>Postdoctoral Associate</strong></i></p>
+                <p><strong><i>Research Associate</strong></i></p>
 
                 <p>
                 <ul>
@@ -2521,22 +2551,31 @@
                 </p>
 
                 <p>
+                    <strong>Project:</strong> Transcriptomic Analysis of Tomato and Two-Spotted Spider Mite
+                    Interaction
                 <ul>
-
+                    My project investigates tomato – spider mite interactions, focusing on how different
+                    tomato-adapted mite populations overcome plant defenses through distinct adaptation
+                    strategies. I study transcriptional responses in both tomato plants and mites to identify
+                    defense-related pathways, detoxification mechanisms, and population-specific patterns of
+                    adaptation.
                 </ul>
                 </p>
 
                 <p>
                     <strong>Research Areas</strong>
                 <ul>
-                    <li>Plant-Pest Interaction</li>
+                    <li>Plant–Pest Interactions</li>
+                    <li>Molecular Biology</li>
+                    <li>Bioinformatics</li>
                 </ul>
                 </p>
 
                 <p>
                     <strong>Degrees and Institutions</strong>
                 <ul>
-                    <li></li>
+                    <li>MSc in Physics (Herzen University, Russia)</li>
+                    <li>BSc in Physics (Herzen University, Russia)</li>
                 </ul>
                 </p>
 
@@ -3202,11 +3241,10 @@
         </div>
     </footer>
 
-    <!-- Place this at the bottom of your page -->
-    <button id="backToTop">Back to Top
-        <span id="backToTopIcon">↑</span>
+    <button id="backToTop" type="button">
+        Back to Top <span id="backToTopIcon">↑</span>
     </button>
-
+</main>
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
@@ -3388,22 +3426,22 @@
         });
 
         // Back to Top button functionality
-        document.getElementById("backToTop").onclick = function () {
-            document.getElementById("mainNav").scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        };
+        document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("backToTop");
+        const nav = document.getElementById("mainNav");
+        if (!btn || !nav) return;
 
-        // Show/Hide Back to Top button on scroll
-        window.onscroll = function () {
-            const backToTopBtn = document.getElementById('backToTop');
-            if (document.body.scrollTop > 1300 || document.documentElement.scrollTop > 1300) {
-                backToTopBtn.style.display = "block";
-            } else {
-                backToTopBtn.style.display = "none";
-            }
-        };
+        function toggleBtn() {
+            btn.style.display = window.scrollY > 300 ? "block" : "none";
+        }
+
+        toggleBtn();
+        window.addEventListener("scroll", toggleBtn);
+
+        btn.addEventListener("click", function () {
+            nav.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        });
 
         // Select all pet items
         const petItems = document.querySelectorAll('.pet-item');
@@ -3556,6 +3594,25 @@
                         block: 'start'
                     });
                 }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("backToTop");
+            const nav = document.getElementById("mainNav");
+
+            if (!btn || !nav) return;
+
+            function toggleBtn() {
+                btn.style.display = window.scrollY > 300 ? "block" : "none";
+            }
+
+            window.addEventListener("scroll", toggleBtn, { passive: true });
+            toggleBtn();
+
+            btn.addEventListener("click", function () {
+                nav.scrollIntoView({ behavior: "smooth", block: "start" });
             });
         });
     </script>
